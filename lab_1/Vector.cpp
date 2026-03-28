@@ -4,7 +4,7 @@
 Vector::Vector(const ValueType *rawArray, const size_t size, float coef) {
     _size = size;
     _multiplicativeCoef = coef;
-    _capacity = size * _multiplicativeCoef;
+    _capacity = static_cast<size_t>(_multiplicativeCoef * static_cast<float>(size));
 
     _data = new ValueType[_capacity];
     for (int i = 0; i < _size; ++i) {
