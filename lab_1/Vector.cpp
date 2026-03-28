@@ -15,10 +15,10 @@ Vector::Vector(const ValueType *rawArray, const size_t size, float coef) {
 Vector::Vector(const Vector &other) {
     _size = other._size;
     _multiplicativeCoef = other._multiplicativeCoef;
-    _capacity = other._capacity;
+    _capacity = static_cast<size_t>(_multiplicativeCoef * static_cast<float>(_size));
 
     _data = new ValueType[_capacity];
-    for (int i = 0; i < _size; ++i) {
+    for (size_t i = 0; i < _size; ++i) {
         _data[i] = other._data[i];
     }
 }
@@ -74,10 +74,13 @@ Vector::~Vector() {
 }
 
 void Vector::pushBack(const ValueType &value) {
-    _data[_size++] = value;
     if (_size == _capacity) {
-        reserve(_capacity * 2);
+        size_t newCapacity = _capacity == 0 ?
+            static_cast<size_t>(_multiplicativeCoef) :
+            static_cast<size_t>(_capacity * _multiplicativeCoef);
+        reserve(newCapacity);
     }
+    _data[_size++] = value;
 }
 
 void Vector::reserve(const size_t capacity) {
@@ -134,10 +137,16 @@ void Vector::insert(const Vector &vector, size_t pos) {
 }
 
 void Vector::popBack() {
+    if (_size == 0) {
+        throw std::out_of_range("Vector is empty");
+    }
     _size--;
 }
 
 void Vector::popFront() {
+    if (_size == 0) {
+        throw std::out_of_range("Vector is empty");
+    }
     for (size_t i = 0; i < _size - 1; i++) {
         _data[i] = _data[i + 1];
     }
@@ -145,14 +154,17 @@ void Vector::popFront() {
 }
 
 void Vector::erase(size_t pos, size_t count) {
-    if (pos + count > _size) {
-        _size = pos;
-        return;
+    if (pos >= _size) {
+        throw std::out_of_range("Position out of range");
     }
+    if (pos + count > _size) {
+        count = _size - pos;
+    }
+
     for (size_t i = pos; i < _size - count; i++) {
         _data[i] = _data[i + count];
     }
-    _size = _size - count;
+    _size -= count;
 }
 
 void Vector::eraseBetween(size_t beginPos, size_t endPos) {
