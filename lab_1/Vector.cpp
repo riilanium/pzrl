@@ -98,14 +98,18 @@ void Vector::reserve(const size_t capacity) {
 }
 
 void Vector::pushFront(const ValueType &value) {
+    if (_size == _capacity) {
+        size_t newCapacity = _capacity == 0 ?
+            static_cast<size_t>(_multiplicativeCoef) :
+            static_cast<size_t>(_capacity * _multiplicativeCoef);
+        reserve(newCapacity);
+    }
     for (size_t i = _size; i > 0; --i) {
         _data[i] = _data[i - 1];
     }
     _data[0] = value;
     _size++;
-    if (_size == _capacity) {
-        reserve(_capacity * 2);
-    }
+
 }
 
 void Vector::insert(const ValueType &value, size_t pos) {
