@@ -5,5 +5,4 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(lab_1
         Vector.h
-        Vector.cpp
-        ../lab_2/StackImplementation.cpp)
+        Vector.cpp)
