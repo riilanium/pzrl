@@ -34,6 +34,22 @@ Stack &Stack::operator=(const Stack &copyStack) {
     return *this;
 }
 
+Stack::Stack(Stack &&moveStack) noexcept
+    : _containerType(moveStack._containerType) {
+    _pimpl = moveStack._pimpl;
+    moveStack._pimpl = nullptr;
+}
+
+Stack &Stack::operator=(Stack &&moveStack) noexcept {
+    if (this != &moveStack) {
+        delete _pimpl;
+        _pimpl = moveStack._pimpl;
+        _containerType = moveStack._containerType;
+        moveStack._pimpl = nullptr;
+    }
+    return *this;
+}
+
 Stack::~Stack() {
     delete _pimpl;
 }
