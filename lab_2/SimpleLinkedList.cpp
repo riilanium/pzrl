@@ -82,14 +82,14 @@ bool SimpleLinkedList::find(ValueType value) const {
     return false;
 }
 
-ValueType SimpleLinkedList::top() const {
+const ValueType &SimpleLinkedList::top() const {
     if (list_size == 0) {
-        return 0;
-    } else {
-        Node *current = head;
-        while (current->next != nullptr) {
-            current = current->next;
-        }
-        return current->data;
+        throw std::out_of_range("List is empty");
     }
+
+    Node *current = head;
+    while (current->next != nullptr) {
+        current = current->next;
+    }
+    return current->data;
 }

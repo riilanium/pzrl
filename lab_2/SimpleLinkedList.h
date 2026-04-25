@@ -28,7 +28,7 @@ public:
 
     size_t size() const;
 
-    ValueType top() const;
+    const ValueType& top() const;
 
     bool find(ValueType value) const;
 };
