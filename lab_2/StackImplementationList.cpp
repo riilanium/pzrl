@@ -1,4 +1,3 @@
-#include <iostream>
 #include "StackImplementation.h"
 #include "SimpleLinkedList.cpp"
 

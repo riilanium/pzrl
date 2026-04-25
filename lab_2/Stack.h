@@ -1,5 +1,6 @@
 #include <iostream>
 #pragma once
+
 #include "StackImplementationList.cpp"
 #include "StackImplementationVector.cpp"
 // Уровень абстракции

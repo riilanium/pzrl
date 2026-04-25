@@ -1,6 +1,5 @@
-#pragma once
 #include "StackImplementation.h"
-#include "Vector.h"
+#include "Vector.cpp"
 
 
 class StackImplementationVector : public IStackImplementation {

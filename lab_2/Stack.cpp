@@ -1,8 +1,6 @@
 #include "Stack.h"
 
-#include <algorithm>
 #include <iostream>
-#include <vector>
 
 Stack::Stack(StackContainer container) {
     _containerType = container;
