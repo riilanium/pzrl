@@ -75,9 +75,9 @@ Vector::~Vector() {
 
 void Vector::pushBack(const ValueType &value) {
     if (_size == _capacity) {
-        size_t newCapacity = _capacity == 0 ?
-            static_cast<size_t>(_multiplicativeCoef) :
-            static_cast<size_t>(_capacity * _multiplicativeCoef);
+        size_t newCapacity = _capacity == 0
+                                 ? static_cast<size_t>(_multiplicativeCoef)
+                                 : static_cast<size_t>(_capacity * _multiplicativeCoef);
         reserve(newCapacity);
     }
     _data[_size++] = value;
@@ -99,9 +99,9 @@ void Vector::reserve(const size_t capacity) {
 
 void Vector::pushFront(const ValueType &value) {
     if (_size == _capacity) {
-        size_t newCapacity = _capacity == 0 ?
-            static_cast<size_t>(_multiplicativeCoef) :
-            static_cast<size_t>(_capacity * _multiplicativeCoef);
+        size_t newCapacity = _capacity == 0
+                                 ? static_cast<size_t>(_multiplicativeCoef)
+                                 : static_cast<size_t>(_capacity * _multiplicativeCoef);
         reserve(newCapacity);
     }
     for (size_t i = _size; i > 0; --i) {
@@ -109,7 +109,6 @@ void Vector::pushFront(const ValueType &value) {
     }
     _data[0] = value;
     _size++;
-
 }
 
 void Vector::insert(const ValueType &value, size_t pos) {

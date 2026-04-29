@@ -1,3 +1,6 @@
+#ifndef VECTOR_H
+#define VECTOR_H
+
 #pragma once
 
 #include <cstdlib>
@@ -117,3 +120,5 @@ private:
     size_t _capacity = 0; //! максимальный размер (количество элементов, под которое выделена память)
     float _multiplicativeCoef = 2.0f; //! коэффициент увеличения _capacity вектора при _size == _capacity
 };
+
+#endif // VECTOR_H

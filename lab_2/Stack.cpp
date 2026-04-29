@@ -17,7 +17,7 @@ Stack::Stack(const ValueType *valueArray, const size_t arraySize, StackContainer
     }
 }
 
-Stack::Stack(const Stack &copyStack) : Stack(copyStack._containerType) {
+Stack::Stack(const Stack &copyStack) : _containerType(copyStack._containerType) {
     if (_containerType == StackContainer::List) {
         _pimpl = new StackImplementationList(*dynamic_cast<StackImplementationList *>(copyStack._pimpl));
     } else {

@@ -1,8 +1,7 @@
-#include <iostream>
 #pragma once
 
-#include "StackImplementationList.cpp"
-#include "StackImplementationVector.cpp"
+#include "StackImplementationList.h"
+#include "StackImplementationVector.h"
 // Уровень абстракции
 // клиентский код подключает именно этот хедер
 
@@ -19,37 +18,43 @@ enum class StackContainer {
 // декларация интерфейса реализации
 class IStackImplementation;
 
-class Stack
-{
+class Stack {
 public:
     // Большая пятерка
     Stack(StackContainer container = StackContainer::Vector);
+
     // элементы массива последовательно подкладываются в стек
-    Stack(const ValueType* valueArray, const size_t arraySize,
+    Stack(const ValueType *valueArray, const size_t arraySize,
           StackContainer container = StackContainer::Vector);
 
-    explicit Stack(const Stack& copyStack);
-    Stack& operator=(const Stack& copyStack);
+    explicit Stack(const Stack &copyStack);
 
-    Stack(Stack&& moveStack) noexcept;
-    Stack& operator=(Stack&& moveStack) noexcept;
+    Stack &operator=(const Stack &copyStack);
+
+    Stack(Stack &&moveStack) noexcept;
+
+    Stack &operator=(Stack &&moveStack) noexcept;
 
     ~Stack();
 
     // добавление в хвост
-    void push(const ValueType& value);
+    void push(const ValueType &value);
+
     // удаление с хвоста
     void pop();
+
     // посмотреть элемент в хвосте
-    const ValueType& top() const;
+    const ValueType &top() const;
+
     // проверка на пустоту
     bool isEmpty() const;
-    // размер 
+
+    // размер
     size_t size() const;
+
 private:
     // указатель на имплементацию (уровень реализации)
-    IStackImplementation* _pimpl = nullptr;
+    IStackImplementation *_pimpl = nullptr;
     // тип контейнера, наверняка понадобится
     StackContainer _containerType;
 };
-

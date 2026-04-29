@@ -2,8 +2,6 @@
 #define LAB_2_SIMPLELINKEDLIST_H
 using ValueType = double;
 
-#include <iostream>
-
 struct Node {
     ValueType data;
     Node *next;
@@ -28,7 +26,7 @@ public:
 
     size_t size() const;
 
-    const ValueType& top() const;
+    const ValueType &top() const;
 
     bool find(ValueType value) const;
 };
