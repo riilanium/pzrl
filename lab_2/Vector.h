@@ -1,8 +1,6 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#pragma once
-
 #include <cstdlib>
 
 using ValueType = double;
