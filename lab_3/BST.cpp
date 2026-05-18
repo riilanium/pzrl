@@ -457,46 +457,36 @@ void BinarySearchTree::erase(const Key &key) {
 // является наименьшим по позиции в in-order обходе.
 BinarySearchTree::ConstIterator
 BinarySearchTree::find(const Key &key) const {
+
     const Node *cur = _root;
-    const Node *result = nullptr;
 
     while (cur) {
-        if (key == cur->keyValuePair.first) {
-            result = cur;
 
-            cur = cur->left;
-        } else if (key < cur->keyValuePair.first) {
-            cur = cur->left;
-        } else {
-            cur = cur->right;
-        }
+        if (key == cur->keyValuePair.first)
+            return ConstIterator(cur, _root);
+
+        cur = (key < cur->keyValuePair.first)
+                ? cur->left
+                : cur->right;
     }
-
-    if (result)
-        return ConstIterator(result, _root);
 
     return cend();
 }
 
-BinarySearchTree::Iterator BinarySearchTree::find(const Key &key) {
+BinarySearchTree::Iterator
+BinarySearchTree::find(const Key &key) {
+
     Node *cur = _root;
-    Node *result = nullptr;
 
     while (cur) {
-        if (key == cur->keyValuePair.first) {
-            result = cur;
 
-            // ищем ещё левее
-            cur = cur->left;
-        } else if (key < cur->keyValuePair.first) {
-            cur = cur->left;
-        } else {
-            cur = cur->right;
-        }
+        if (key == cur->keyValuePair.first)
+            return Iterator(cur, _root);
+
+        cur = (key < cur->keyValuePair.first)
+                ? cur->left
+                : cur->right;
     }
-
-    if (result)
-        return Iterator(result, _root);
 
     return end();
 }
@@ -533,7 +523,7 @@ BinarySearchTree::ConstIterator BinarySearchTree::min() const {
     // Самый левый узел — наименьший ключ
     const Node *cur = _root;
     while (cur->left) cur = cur->left;
-    return ConstIterator(cur);
+    return ConstIterator(cur, _root);
 }
 
 BinarySearchTree::ConstIterator BinarySearchTree::max() const {
@@ -541,7 +531,7 @@ BinarySearchTree::ConstIterator BinarySearchTree::max() const {
     // Самый правый узел — наибольший ключ
     const Node *cur = _root;
     while (cur->right) cur = cur->right;
-    return ConstIterator(cur);
+    return ConstIterator(cur, _root);
 }
 
 // ============================================================
