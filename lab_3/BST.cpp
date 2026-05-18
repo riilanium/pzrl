@@ -172,25 +172,31 @@ const std::pair<Key, Value> *BinarySearchTree::Iterator::operator->() const {
     return &_node->keyValuePair;
 }
 
-// Переход к следующему узлу в in-order обходе (pre-increment)
-BinarySearchTree::Iterator BinarySearchTree::Iterator::operator++() {
+BinarySearchTree::Iterator
+BinarySearchTree::Iterator::operator++() {
+
+    // защита от ++end()
+    if (_node == nullptr)
+        return *this;
+
     if (_node->right) {
-        // Правое поддерево существует: следующий — наименьший в нём,
-        // то есть самый левый узел правого поддерева
+
         _node = _node->right;
-        while (_node->left) _node = _node->left;
-    } else {
-        // Правого поддерева нет: поднимаемся вверх до тех пор,
-        // пока не найдём предка, из левого потомка которого мы пришли
+
+        while (_node->left)
+            _node = _node->left;
+    }
+    else {
+
         Node *prev = _node;
         _node = _node->parent;
+
         while (_node != nullptr && _node->right == prev) {
-            prev  = _node;
+            prev = _node;
             _node = _node->parent;
         }
-        // Если _node == nullptr — мы были в самом правом узле,
-        // итератор теперь указывает на end() (nullptr)
     }
+
     return *this;
 }
 
@@ -257,18 +263,31 @@ const std::pair<Key, Value> *BinarySearchTree::ConstIterator::operator->() const
     return &_node->keyValuePair;
 }
 
-BinarySearchTree::ConstIterator BinarySearchTree::ConstIterator::operator++() {
+BinarySearchTree::ConstIterator
+BinarySearchTree::ConstIterator::operator++() {
+
+    // защита от ++cend()
+    if (_node == nullptr)
+        return *this;
+
     if (_node->right) {
+
         _node = _node->right;
-        while (_node->left) _node = _node->left;
-    } else {
+
+        while (_node->left)
+            _node = _node->left;
+    }
+    else {
+
         const Node *prev = _node;
         _node = _node->parent;
+
         while (_node != nullptr && _node->right == prev) {
-            prev  = _node;
+            prev = _node;
             _node = _node->parent;
         }
     }
+
     return *this;
 }
 
