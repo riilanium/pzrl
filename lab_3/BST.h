@@ -59,7 +59,7 @@ public:
     class Iterator
     {
     public:
-        explicit Iterator(Node *node, Node *root = nullptr);
+        explicit Iterator(Node *node);
 
         std::pair<Key, Value> &operator*();
         const std::pair<Key, Value> &operator*() const;
@@ -78,15 +78,13 @@ public:
 
     private:
         Node *_node;
-        Node *_root;
     };
 
     //! Константный итератор бинарного дерева поиска
     class ConstIterator
     {
     public:
-        explicit ConstIterator(const Node *node,
-                               const Node *root = nullptr);
+        explicit ConstIterator(const Node *node);
 
         const std::pair<Key, Value> &operator*() const;
         const std::pair<Key, Value> *operator->() const;
@@ -102,7 +100,6 @@ public:
 
     private:
         const Node *_node;
-        const Node *_root;
     };
 
     //! Вставить элемент с ключем key и значением value
