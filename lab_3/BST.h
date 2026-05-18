@@ -33,6 +33,7 @@ class BinarySearchTree
         void insert(const Key &key, const Value &value);
         //! Удалить узел из поддерева, где текущий узел - корень
         void erase(const Key &key);
+        Node* erase_node(Node *node, const Key &key);
 
         std::pair<Key, Value> keyValuePair; //!< Пара ключ - значение
         Node *parent = nullptr; //!< родительский узел
@@ -51,6 +52,7 @@ public:
     explicit BinarySearchTree(BinarySearchTree &&other) noexcept;
     //! Оператор присваивания перемещением
     BinarySearchTree &operator=(BinarySearchTree &&other) noexcept;
+    void cleartree(Node *node);
     //! Деструктор
     ~BinarySearchTree();
 
@@ -121,11 +123,17 @@ public:
     **************************************************************/
     std::pair<Iterator, Iterator> equalRange(const Key &key);
     std::pair<ConstIterator, ConstIterator> equalRange(const Key &key) const;
+    void delete_nill();
+    void insert_nill();
+
 
     //! Получить итератор на элемент с наименьшим ключем в дереве
     ConstIterator min() const;
+
+    void findMinRecursive(Node* node, const Key& key, Node*& result) const;
     //! Получить итератор на элемент с наибольшим ключем в дереве
     ConstIterator max() const;
+    void findMaxRecursive(Node* node, const Key& key, Node*& result) const;
     //! Получить итератор на элемент с ключем key с наименьшим значением
     ConstIterator min(const Key &key) const;
     //! Получить итератор на элемент с ключем key с наибольшим значением
@@ -146,6 +154,10 @@ public:
     size_t size() const;
     //! Вывести дерево в консоль
     void output_tree();
+	//! Получить максимальную высоту в дереве
+	size_t max_height() const;
+
+    size_t maxHeight(const Node* node) const;
 
 private:
     size_t _size = 0; //!< размер дерева
