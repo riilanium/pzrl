@@ -151,88 +151,108 @@ void BinarySearchTree::Node::erase(const Key &key) {
 }
 
 // ============================================================
-//  Iterator — безопасный
+//  Iterator
 // ============================================================
 
+BinarySearchTree::Iterator::Iterator(Node *node) : _node(node) {}
+
 std::pair<Key, Value> &BinarySearchTree::Iterator::operator*() {
-    static std::pair<Key, Value> dummy(Key{}, Value{});
-    if (!_node) return dummy;
     return _node->keyValuePair;
 }
 
 const std::pair<Key, Value> &BinarySearchTree::Iterator::operator*() const {
-    static std::pair<Key, Value> dummy(Key{}, Value{});
-    if (!_node) return dummy;
     return _node->keyValuePair;
 }
 
 std::pair<Key, Value> *BinarySearchTree::Iterator::operator->() {
-    if (!_node) return nullptr;
     return &_node->keyValuePair;
 }
 
 const std::pair<Key, Value> *BinarySearchTree::Iterator::operator->() const {
-    if (!_node) return nullptr;
     return &_node->keyValuePair;
 }
 
+// Переход к следующему узлу в in-order обходе (pre-increment)
 BinarySearchTree::Iterator BinarySearchTree::Iterator::operator++() {
-    if (!_node) return *this;   // ++end() == end()
     if (_node->right) {
+        // Правое поддерево существует: следующий — наименьший в нём,
+        // то есть самый левый узел правого поддерева
         _node = _node->right;
         while (_node->left) _node = _node->left;
     } else {
+        // Правого поддерева нет: поднимаемся вверх до тех пор,
+        // пока не найдём предка, из левого потомка которого мы пришли
         Node *prev = _node;
         _node = _node->parent;
         while (_node != nullptr && _node->right == prev) {
-            prev = _node;
+            prev  = _node;
             _node = _node->parent;
         }
+        // Если _node == nullptr — мы были в самом правом узле,
+        // итератор теперь указывает на end() (nullptr)
     }
     return *this;
 }
 
+// Post-increment: возвращаем старое состояние, затем продвигаемся
 BinarySearchTree::Iterator BinarySearchTree::Iterator::operator++(int) {
     Iterator old = *this;
     ++(*this);
     return old;
 }
 
+// Переход к предыдущему узлу (pre-decrement)
 BinarySearchTree::Iterator BinarySearchTree::Iterator::operator--() {
-    if (!_node) return *this;   // --end() == end()
+    if (_node == nullptr)
+        return *this;
+
     if (_node->left) {
+        // Левое поддерево существует: предыдущий — наибольший в нём,
+        // то есть самый правый узел левого поддерева
         _node = _node->left;
         while (_node->right) _node = _node->right;
     } else {
+        // Левого поддерева нет: поднимаемся вверх до тех пор,
+        // пока не найдём предка, из правого потомка которого мы пришли
         Node *prev = _node;
         _node = _node->parent;
         while (_node != nullptr && _node->left == prev) {
-            prev = _node;
+            prev  = _node;
             _node = _node->parent;
         }
     }
     return *this;
 }
 
+BinarySearchTree::Iterator BinarySearchTree::Iterator::operator--(int) {
+    Iterator old = *this;
+    --(*this);
+    return old;
+}
+
+bool BinarySearchTree::Iterator::operator==(const Iterator &other) const {
+    return _node == other._node;
+}
+
+bool BinarySearchTree::Iterator::operator!=(const Iterator &other) const {
+    return _node != other._node;
+}
+
 // ============================================================
-//  ConstIterator — аналогичные проверки
+//  ConstIterator — полная копия Iterator, но с const-указателем
 // ============================================================
 
 BinarySearchTree::ConstIterator::ConstIterator(const Node *node) : _node(node) {}
 
 const std::pair<Key, Value> &BinarySearchTree::ConstIterator::operator*() const {
-    static const std::pair<Key, Value> dummy(Key{}, Value{});
-    if (!_node) return dummy;          // безопасно для end()
     return _node->keyValuePair;
 }
 
 const std::pair<Key, Value> *BinarySearchTree::ConstIterator::operator->() const {
-    if (!_node) return nullptr;        // безопасно для end()
     return &_node->keyValuePair;
 }
 
 BinarySearchTree::ConstIterator BinarySearchTree::ConstIterator::operator++() {
-    if (!_node) return *this;          // ++end() == end()
     if (_node->right) {
         _node = _node->right;
         while (_node->left) _node = _node->left;
@@ -240,7 +260,7 @@ BinarySearchTree::ConstIterator BinarySearchTree::ConstIterator::operator++() {
         const Node *prev = _node;
         _node = _node->parent;
         while (_node != nullptr && _node->right == prev) {
-            prev = _node;
+            prev  = _node;
             _node = _node->parent;
         }
     }
@@ -254,7 +274,10 @@ BinarySearchTree::ConstIterator BinarySearchTree::ConstIterator::operator++(int)
 }
 
 BinarySearchTree::ConstIterator BinarySearchTree::ConstIterator::operator--() {
-    if (!_node) return *this;          // --end() == end()
+    if (_node == nullptr)
+        return *this;
+
+
     if (_node->left) {
         _node = _node->left;
         while (_node->right) _node = _node->right;
@@ -262,7 +285,7 @@ BinarySearchTree::ConstIterator BinarySearchTree::ConstIterator::operator--() {
         const Node *prev = _node;
         _node = _node->parent;
         while (_node != nullptr && _node->left == prev) {
-            prev = _node;
+            prev  = _node;
             _node = _node->parent;
         }
     }
