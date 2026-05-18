@@ -8,9 +8,9 @@ using Key = uint32_t; //!< тип ключей в дереве
 using Value = double; //!< тип значений в дереве
 
 //! Имплементация бинарного дерева поиска
-class BinarySearchTree 
+class BinarySearchTree
 {
-    struct Node 
+    struct Node
     {
         //! Конструктор с параметрами
         //! \param key - ключ
@@ -18,8 +18,8 @@ class BinarySearchTree
         //! \param parent - родительский узел
         //! \param left - левый дочерний узел
         //! \param right - правый дочерний узел
-        Node(Key key, Value value, 
-             Node *parent = nullptr, Node *left = nullptr, 
+        Node(Key key, Value value,
+             Node *parent = nullptr, Node *left = nullptr,
              Node *right = nullptr);
 
         //! Конструктор копирования
@@ -55,11 +55,11 @@ public:
     ~BinarySearchTree();
 
     //! \brief Итератор бинарного дерева поиска
-    //! \note Обходит дерево последовательно от узла с меньшим ключом к узлу с большим 
-    class Iterator 
+    //! \note Обходит дерево последовательно от узла с меньшим ключом к узлу с большим
+    class Iterator
     {
     public:
-        explicit Iterator(Node *node);
+        explicit Iterator(Node *node, Node *root = nullptr);
 
         std::pair<Key, Value> &operator*();
         const std::pair<Key, Value> &operator*() const;
@@ -78,13 +78,15 @@ public:
 
     private:
         Node *_node;
+        Node *_root;
     };
 
     //! Константный итератор бинарного дерева поиска
-    class ConstIterator 
+    class ConstIterator
     {
     public:
-        explicit ConstIterator(const Node *node);
+        explicit ConstIterator(const Node *node,
+                               const Node *root = nullptr);
 
         const std::pair<Key, Value> &operator*() const;
         const std::pair<Key, Value> *operator->() const;
@@ -100,6 +102,7 @@ public:
 
     private:
         const Node *_node;
+        const Node *_root;
     };
 
     //! Вставить элемент с ключем key и значением value
@@ -115,18 +118,18 @@ public:
     Найти все элементы, у которых ключ равен key:
       - первый итератор пары - первый элемент в дереве, равный key
       - второй итератор пары - первый элемент в дереве больший, чем key
-     
-    [pair.first, pair.second) - полуинтервал, содержащий все 
+
+    [pair.first, pair.second) - полуинтервал, содержащий все
     элементы с ключем key
     **************************************************************/
     std::pair<Iterator, Iterator> equalRange(const Key &key);
     std::pair<ConstIterator, ConstIterator> equalRange(const Key &key) const;
-    
+
     //! Получить итератор на элемент с наименьшим ключем в дереве
     ConstIterator min() const;
     //! Получить итератор на элемент с наибольшим ключем в дереве
     ConstIterator max() const;
-    //! Получить итератор на элемент с ключем key с наименьшим значением 
+    //! Получить итератор на элемент с ключем key с наименьшим значением
     ConstIterator min(const Key &key) const;
     //! Получить итератор на элемент с ключем key с наибольшим значением
     ConstIterator max(const Key &key) const;
