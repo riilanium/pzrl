@@ -201,23 +201,31 @@ BinarySearchTree::Iterator BinarySearchTree::Iterator::operator++(int) {
     return old;
 }
 
-// Переход к предыдущему узлу (pre-decrement)
-BinarySearchTree::Iterator BinarySearchTree::Iterator::operator--() {
+BinarySearchTree::Iterator
+BinarySearchTree::Iterator::operator--() {
+
+    // защита от --end()
+    if (_node == nullptr)
+        return *this;
+
     if (_node->left) {
-        // Левое поддерево существует: предыдущий — наибольший в нём,
-        // то есть самый правый узел левого поддерева
+
         _node = _node->left;
-        while (_node->right) _node = _node->right;
-    } else {
-        // Левого поддерева нет: поднимаемся вверх до тех пор,
-        // пока не найдём предка, из правого потомка которого мы пришли
+
+        while (_node->right)
+            _node = _node->right;
+    }
+    else {
+
         Node *prev = _node;
         _node = _node->parent;
+
         while (_node != nullptr && _node->left == prev) {
-            prev  = _node;
+            prev = _node;
             _node = _node->parent;
         }
     }
+
     return *this;
 }
 
@@ -270,18 +278,31 @@ BinarySearchTree::ConstIterator BinarySearchTree::ConstIterator::operator++(int)
     return old;
 }
 
-BinarySearchTree::ConstIterator BinarySearchTree::ConstIterator::operator--() {
+BinarySearchTree::ConstIterator
+BinarySearchTree::ConstIterator::operator--() {
+
+    // защита от --cend()
+    if (_node == nullptr)
+        return *this;
+
     if (_node->left) {
+
         _node = _node->left;
-        while (_node->right) _node = _node->right;
-    } else {
+
+        while (_node->right)
+            _node = _node->right;
+    }
+    else {
+
         const Node *prev = _node;
         _node = _node->parent;
+
         while (_node != nullptr && _node->left == prev) {
-            prev  = _node;
+            prev = _node;
             _node = _node->parent;
         }
     }
+
     return *this;
 }
 
