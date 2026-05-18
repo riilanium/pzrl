@@ -25,14 +25,13 @@ bool BinarySearchTree::Node::operator==(const Node &other) const {
 }
 
 void BinarySearchTree::Node::output_node_tree() const {
-    if (left)  left->output_node_tree();          // сначала всё меньшее
+    if (left)  left->output_node_tree();
     std::cout << keyValuePair.first << " : " << keyValuePair.second << "\n";
-    if (right) right->output_node_tree();         // затем всё большее
+    if (right) right->output_node_tree();
 }
 
 void BinarySearchTree::Node::insert(const Key &key, const Value &value) {
     if (key < keyValuePair.first) {
-        // Ключ меньше — идём влево
         if (left == nullptr)
             left = new Node(key, value, this);
         else
