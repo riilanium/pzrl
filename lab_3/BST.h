@@ -33,7 +33,6 @@ class BinarySearchTree
         void insert(const Key &key, const Value &value);
         //! Удалить узел из поддерева, где текущий узел - корень
         void erase(const Key &key);
-        Node* erase_node(Node *node, const Key &key);
 
         std::pair<Key, Value> keyValuePair; //!< Пара ключ - значение
         Node *parent = nullptr; //!< родительский узел
@@ -52,16 +51,14 @@ public:
     explicit BinarySearchTree(BinarySearchTree &&other) noexcept;
     //! Оператор присваивания перемещением
     BinarySearchTree &operator=(BinarySearchTree &&other) noexcept;
-    void cleartree(Node *node);
     //! Деструктор
     ~BinarySearchTree();
 
     //! \brief Итератор бинарного дерева поиска
     //! \note Обходит дерево последовательно от узла с меньшим ключом к узлу с большим
-    class Iterator
-    {
+    class Iterator {
     public:
-        explicit Iterator(Node *node);
+        explicit Iterator(Node *node, Node *root = nullptr);
 
         std::pair<Key, Value> &operator*();
         const std::pair<Key, Value> &operator*() const;
@@ -80,13 +77,13 @@ public:
 
     private:
         Node *_node;
+        Node *_root;
     };
 
     //! Константный итератор бинарного дерева поиска
-    class ConstIterator
-    {
+    class ConstIterator {
     public:
-        explicit ConstIterator(const Node *node);
+        explicit ConstIterator(const Node *node, const Node *root = nullptr);
 
         const std::pair<Key, Value> &operator*() const;
         const std::pair<Key, Value> *operator->() const;
@@ -102,6 +99,7 @@ public:
 
     private:
         const Node *_node;
+        const Node *_root;
     };
 
     //! Вставить элемент с ключем key и значением value
@@ -123,17 +121,11 @@ public:
     **************************************************************/
     std::pair<Iterator, Iterator> equalRange(const Key &key);
     std::pair<ConstIterator, ConstIterator> equalRange(const Key &key) const;
-    void delete_nill();
-    void insert_nill();
-
 
     //! Получить итератор на элемент с наименьшим ключем в дереве
     ConstIterator min() const;
-
-    void findMinRecursive(Node* node, const Key& key, Node*& result) const;
     //! Получить итератор на элемент с наибольшим ключем в дереве
     ConstIterator max() const;
-    void findMaxRecursive(Node* node, const Key& key, Node*& result) const;
     //! Получить итератор на элемент с ключем key с наименьшим значением
     ConstIterator min(const Key &key) const;
     //! Получить итератор на элемент с ключем key с наибольшим значением
@@ -154,10 +146,6 @@ public:
     size_t size() const;
     //! Вывести дерево в консоль
     void output_tree();
-	//! Получить максимальную высоту в дереве
-	size_t max_height() const;
-
-    size_t maxHeight(const Node* node) const;
 
 private:
     size_t _size = 0; //!< размер дерева
