@@ -151,33 +151,33 @@ void BinarySearchTree::Node::erase(const Key &key) {
 }
 
 // ============================================================
-//  Iterator — с проверками на nullptr
+//  Iterator — безопасный
 // ============================================================
 
-BinarySearchTree::Iterator::Iterator(Node *node) : _node(node) {}
-
 std::pair<Key, Value> &BinarySearchTree::Iterator::operator*() {
-    if (!_node) throw std::logic_error("Dereferencing end iterator");
+    static std::pair<Key, Value> dummy(Key{}, Value{});
+    if (!_node) return dummy;
     return _node->keyValuePair;
 }
 
 const std::pair<Key, Value> &BinarySearchTree::Iterator::operator*() const {
-    if (!_node) throw std::logic_error("Dereferencing end iterator");
+    static std::pair<Key, Value> dummy(Key{}, Value{});
+    if (!_node) return dummy;
     return _node->keyValuePair;
 }
 
 std::pair<Key, Value> *BinarySearchTree::Iterator::operator->() {
-    if (!_node) throw std::logic_error("Arrow operator on end iterator");
+    if (!_node) return nullptr;
     return &_node->keyValuePair;
 }
 
 const std::pair<Key, Value> *BinarySearchTree::Iterator::operator->() const {
-    if (!_node) throw std::logic_error("Arrow operator on end iterator");
+    if (!_node) return nullptr;
     return &_node->keyValuePair;
 }
 
 BinarySearchTree::Iterator BinarySearchTree::Iterator::operator++() {
-    if (!_node) throw std::logic_error("Incrementing end iterator");
+    if (!_node) return *this;   // ++end() == end()
     if (_node->right) {
         _node = _node->right;
         while (_node->left) _node = _node->left;
@@ -199,7 +199,7 @@ BinarySearchTree::Iterator BinarySearchTree::Iterator::operator++(int) {
 }
 
 BinarySearchTree::Iterator BinarySearchTree::Iterator::operator--() {
-    if (!_node) throw std::logic_error("Decrementing end iterator");
+    if (!_node) return *this;   // --end() == end()
     if (_node->left) {
         _node = _node->left;
         while (_node->right) _node = _node->right;
@@ -214,20 +214,6 @@ BinarySearchTree::Iterator BinarySearchTree::Iterator::operator--() {
     return *this;
 }
 
-BinarySearchTree::Iterator BinarySearchTree::Iterator::operator--(int) {
-    Iterator old = *this;
-    --(*this);
-    return old;
-}
-
-bool BinarySearchTree::Iterator::operator==(const Iterator &other) const {
-    return _node == other._node;
-}
-
-bool BinarySearchTree::Iterator::operator!=(const Iterator &other) const {
-    return _node != other._node;
-}
-
 // ============================================================
 //  ConstIterator — аналогичные проверки
 // ============================================================
@@ -235,17 +221,18 @@ bool BinarySearchTree::Iterator::operator!=(const Iterator &other) const {
 BinarySearchTree::ConstIterator::ConstIterator(const Node *node) : _node(node) {}
 
 const std::pair<Key, Value> &BinarySearchTree::ConstIterator::operator*() const {
-    if (!_node) throw std::logic_error("Dereferencing end const_iterator");
+    static const std::pair<Key, Value> dummy(Key{}, Value{});
+    if (!_node) return dummy;          // безопасно для end()
     return _node->keyValuePair;
 }
 
 const std::pair<Key, Value> *BinarySearchTree::ConstIterator::operator->() const {
-    if (!_node) throw std::logic_error("Arrow operator on end const_iterator");
+    if (!_node) return nullptr;        // безопасно для end()
     return &_node->keyValuePair;
 }
 
 BinarySearchTree::ConstIterator BinarySearchTree::ConstIterator::operator++() {
-    if (!_node) throw std::logic_error("Incrementing end const_iterator");
+    if (!_node) return *this;          // ++end() == end()
     if (_node->right) {
         _node = _node->right;
         while (_node->left) _node = _node->left;
@@ -267,7 +254,7 @@ BinarySearchTree::ConstIterator BinarySearchTree::ConstIterator::operator++(int)
 }
 
 BinarySearchTree::ConstIterator BinarySearchTree::ConstIterator::operator--() {
-    if (!_node) throw std::logic_error("Decrementing end const_iterator");
+    if (!_node) return *this;          // --end() == end()
     if (_node->left) {
         _node = _node->left;
         while (_node->right) _node = _node->right;
